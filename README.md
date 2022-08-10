@@ -1,4 +1,4 @@
-# greynoise-test
+# GreyNoise API query script
 CLI based Greynoise API query tool to gather data on target IP addresses
 
 Functions
@@ -9,11 +9,18 @@ Functions
 4) List IP threat data (Classification, actor, tags, spoofable)
 5) List IP Metadata (RDNS Pointer, ASN, country code)
 
-TODO
+To-Do
 ----
-1) Add function calls after successful malicious IP lookup
-2) Allow user to enter new query IP without restarting program after entering valid IP
 
-KNOWN BUGS
+
+Known bugs
 ----------
-1) Entering a second IP address after the first one evaluated always returns an invalid IP error
+
+
+Test IPs
+- Malicious
+    -96.18.5.174
+    -77.120.154.110
+- Safe
+    -1.1.1.1
+    -8.8.8.8
