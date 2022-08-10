@@ -8,6 +8,7 @@ Functions
 3) List geographic IP data (Country, Region, City, Category (isp, mobile, edu, etc))
 4) List IP threat data (Classification, actor, tags, spoofable)
 5) List IP Metadata (RDNS Pointer, ASN, country code)
+6) Quick Check IP address
 
 To-Do
 ----
