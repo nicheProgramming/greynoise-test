@@ -7,15 +7,8 @@ from collections import namedtuple
 # Base IP will need to be appended to query URL before query is sent
 ip = ""
 
-# Set request headers, ensuring data recieved is JSON and storing the key to the API
-# Note, please don't use API key for evil :)
-headers = {
-    "Accept": "application/json",
-    "key": "C2YTV9Z1T9blcxt47bNLhKaE1Pd7QpGQuXWxd4uxntr4EcN5cO5id6wq3ivxcLCv"
-}
-
 # Define primary functionality loop
-def main(ip, headers):
+def main(ip):
     # Request IP to be queried from user as many times as necessary to get valid IP address
     while ip == "":
         queryUrl = "https://api.greynoise.io/v2/noise/context/"
@@ -33,7 +26,7 @@ def main(ip, headers):
         queryUrl = queryUrl + str(ip)
 
         # Query greynoise enterprise API and retrieve all data assosciated with host
-        greynoiseData = requests.get(queryUrl, headers=headers)
+        greynoiseData = query(queryUrl)
 
         # Convery query response into python object so we may more easily reference it's datapoints
         # For instance, if we recieved the response:
@@ -66,19 +59,59 @@ def main(ip, headers):
             # If user gets to below line of code, they have selected option 6 to evaluate a new IP. Reset the IP to blank and restart the loop
             ip = ""
 
+def query(url):
+    # Set request headers, ensuring data recieved is JSON and storing the key to the API
+    # Note, please don't use API key for evil :)
+    headers = {
+        "Accept": "application/json",
+        "key": "C2YTV9Z1T9blcxt47bNLhKaE1Pd7QpGQuXWxd4uxntr4EcN5cO5id6wq3ivxcLCv"
+    }
+
+    # Send HTTP Get request to target URL with given parameters
+    data = requests.get(url, headers=headers)
+
+    # Return the resulting JSON object
+    return data
+
+# Print all selection options
+def listSelections():
+    print("1) List IP Visibility data (i.e. first and last seen date, OS)")
+    print("2) List IP VPN data (If IP is known part of VPN service, and name of service if so, if it is a tor exit node, etc.)")
+    print("3) List geographic IP data (Country, Region, City, Category (isp, mobile, edu, etc))")   
+    print("4) List IP threat data (Classification, actor, tags, spoofable)")
+    print("5) List IP Metadata (RDNS Pointer, ASN, country code, port)")
+    print("6) Quick Check IP address")
+    print("7) Evaluate another IP address")
+    print("8) End program")
+
+def quickCheck(ip):
+    queryUrl = "https://api.greynoise.io/v2/noise/quick/" + str(ip)
+    greynoiseData = query(queryUrl)
+
+    # Convery query response into python object so we may more easily reference it's datapoints
+    parsedData = json.loads(greynoiseData.text, object_hook=
+                            lambda d : namedtuple('parsedData', d.keys())
+                            (*d.values()))
+
+    # If the query returns an error rather than valid data, tell user and ask for valid IP
+    if hasattr(parsedData, "error"):
+        print("Error: " + parsedData.error)
+        print("Please try again.")
+        return
+
+    print("IP: " + parsedData.ip)
+    # Object code reference table can be found here: https://docs.greynoise.io/reference/quickcheck-1
+    print("Object Code: " + parsedData.code)
+    print("Noise: " + str(parsedData.noise))
+    print("RIOT (Rule it out): " + str(parsedData.riot))
+
 # Define function/s which evaluate a malicious IP address
 def evaluateMaliciousIp(parsedGnData):
     selection = ""
 
     while selection == "":
         # Print program options for user
-        print("1) List IP Visibility data (i.e. first and last seen date, OS)")
-        print("2) List IP VPN data (If IP is known part of VPN service, and name of service if so, if it is a tor exit node, etc.)")
-        print("3) List geographic IP data (Country, Region, City, Category (isp, mobile, edu, etc))")   
-        print("4) List IP threat data (Classification, actor, tags, spoofable)")
-        print("5) List IP Metadata (RDNS Pointer, ASN, country code, port)")
-        print("6) Evaluate another IP address")
-        print("7) End program")
+        listSelections()
 
         # Get user input. If valid, return requested data, if not, have them enter another selection.
         selection = input()
@@ -121,9 +154,12 @@ def evaluateMaliciousIp(parsedGnData):
             print("Country Code: " + parsedGnData.metadata.country_code)
             input("Hit enter to select another option.")
         elif selection == "6":
+            quickCheck(parsedGnData.ip)
+            input("Hit enter to select another option.")
+        elif selection == "7":
             # Allow main() function to continue
             return
-        elif selection == "7":
+        elif selection == "8":
             # End program
             exit()
         else:
@@ -132,4 +168,4 @@ def evaluateMaliciousIp(parsedGnData):
         selection = ""
         continue
 
-main(ip, headers)
+main(ip)
