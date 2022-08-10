@@ -46,8 +46,6 @@ def main(ip, headers):
                                 lambda d : namedtuple('parsedData', d.keys())
                                 (*d.values()))
 
-        print(str(parsedData))
-        print(ip)
         # If the query returns an error rather than valid data, tell user and ask for valid IP
         if hasattr(parsedData, "error"):
             print("Error: " + parsedData.error)
