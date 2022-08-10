@@ -4,14 +4,10 @@ import requests
 import ipaddress
 from collections import namedtuple
 
-# Base query URL, IP will need to be appended before query is sent
-queryUrl = "https://api.greynoise.io/v2/noise/context/"
+# Base IP will need to be appended to query URL before query is sent
 ip = ""
 
-# NOTE: 96.18.5.174 is a known malicious IP address, it will return a full data set from this query.
-# 8.8.8.8 is a known NOT malicious IP address, and will only return IP address provided and "seen" boolean
-
-# Sert request headers, ensuring data recieved is JSON and storing the key to the API
+# Set request headers, ensuring data recieved is JSON and storing the key to the API
 # Note, please don't use API key for evil :)
 headers = {
     "Accept": "application/json",
@@ -19,9 +15,11 @@ headers = {
 }
 
 # Define primary functionality loop
-def main(queryUrl, ip, headers):
+def main(ip, headers):
     # Request IP to be queried from user as many times as necessary to get valid IP address
     while ip == "":
+        queryUrl = "https://api.greynoise.io/v2/noise/context/"
+
         try:
             # This checks to make sure the input IP is valid. If it is not, it will throw a ValueError
             ip = ipaddress.ip_address(input("Please input the IP address of the device you would like to query:"))
@@ -136,4 +134,4 @@ def evaluateMaliciousIp(parsedGnData):
         selection = ""
         continue
 
-main(queryUrl, ip, headers)
+main(ip, headers)
