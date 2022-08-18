@@ -1,8 +1,13 @@
-from ast import parse
+import os
 import json
 import requests
 import ipaddress
+from ast import parse
 from collections import namedtuple
+from dotenv import load_dotenv, find_dotenv
+
+# Search for and load .env file to access environment variables
+load_dotenv(find_dotenv())
 
 # Base IP will need to be appended to query URL before query is sent
 ip = ""
@@ -64,7 +69,7 @@ def query(url):
     # Note, please don't use API key for evil :)
     headers = {
         "Accept": "application/json",
-        "key": "C2YTV9Z1T9blcxt47bNLhKaE1Pd7QpGQuXWxd4uxntr4EcN5cO5id6wq3ivxcLCv"
+        "key": os.getenv('API_KEY')
     }
 
     # Send HTTP Get request to target URL with given parameters
