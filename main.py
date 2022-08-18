@@ -122,54 +122,55 @@ def evaluateMaliciousIp(parsedGnData):
         selection = input()
 
         # 1) List IP Visibility data (i.e. first and last seen date, OS)
-        if selection == "1":
-            print("IP: " + parsedGnData.ip)
-            print("First seen: " + str(parsedGnData.first_seen))
-            print("Last seen: " + str(parsedGnData.last_seen))
-            print("Operating System: " + parsedGnData.metadata.os)
-            input("Hit enter to select another option.")
-        # 2) List IP VPN data (If IP is known part of VPN service, and name of service if so, if it is a tor exit node, etc.)
-        elif selection == "2":
-            print("IP: " + parsedGnData.ip)
-            print("IP is assosciated with VPN Service: " + str(parsedGnData.vpn))
-            print("VPN Service assosciated with IP: " + parsedGnData.vpn_service)
-            print("TOR: " + str(parsedGnData.metadata.tor))
-            input("Hit enter to select another option.")
-        # 3) List geographic IP data (Country, Region, City, Category (isp, mobile, edu, etc))
-        elif selection == "3":
-            print("IP: " + parsedGnData.ip)
-            print("Country: " + parsedGnData.metadata.country)
-            print("Region: " + parsedGnData.metadata.region)
-            print("City: " + parsedGnData.metadata.city)
-            print("Category: " + parsedGnData.metadata.category)
-            input("Hit enter to select another option.")
-        # 4) List IP threat data (Classification, actor, tags, spoofable)
-        elif selection == "4":
-            print("IP: " + parsedGnData.ip)
-            print("Classification: " + parsedGnData.classification)
-            print("Actor: " + parsedGnData.actor)
-            print("Tags: " + str(parsedGnData.tags))
-            print("Spoofable: " + str(parsedGnData.spoofable))
-            input("Hit enter to select another option.")
-        # 5) List IP Metadata (RDNS Pointer, ASN, country code)
-        elif selection == "5":
-            print("IP: " + parsedGnData.ip)
-            print("RDNS Pointer: " + parsedGnData.metadata.rdns)
-            print("ASN: " + parsedGnData.metadata.asn)
-            print("Country Code: " + parsedGnData.metadata.country_code)
-            input("Hit enter to select another option.")
-        elif selection == "6":
-            quickCheck(parsedGnData.ip)
-            input("Hit enter to select another option.")
-        elif selection == "7":
-            # Allow main() function to continue
-            return
-        elif selection == "8":
-            # End program
-            exit()
-        else:
-            # Invalid input, reset selection and restart loop
-            print("You have input an invalid selection, please try again")
+        match selection:
+            case "1":
+                print("IP: " + parsedGnData.ip)
+                print("First seen: " + str(parsedGnData.first_seen))
+                print("Last seen: " + str(parsedGnData.last_seen))
+                print("Operating System: " + parsedGnData.metadata.os)
+                input("Hit enter to select another option.")
+            # 2) List IP VPN data (If IP is known part of VPN service, and name of service if so, if it is a tor exit node, etc.)
+            case "2":
+                print("IP: " + parsedGnData.ip)
+                print("IP is assosciated with VPN Service: " + str(parsedGnData.vpn))
+                print("VPN Service assosciated with IP: " + parsedGnData.vpn_service)
+                print("TOR: " + str(parsedGnData.metadata.tor))
+                input("Hit enter to select another option.")
+            # 3) List geographic IP data (Country, Region, City, Category (isp, mobile, edu, etc))
+            case "3":
+                print("IP: " + parsedGnData.ip)
+                print("Country: " + parsedGnData.metadata.country)
+                print("Region: " + parsedGnData.metadata.region)
+                print("City: " + parsedGnData.metadata.city)
+                print("Category: " + parsedGnData.metadata.category)
+                input("Hit enter to select another option.")
+            # 4) List IP threat data (Classification, actor, tags, spoofable)
+            case "4":
+                print("IP: " + parsedGnData.ip)
+                print("Classification: " + parsedGnData.classification)
+                print("Actor: " + parsedGnData.actor)
+                print("Tags: " + str(parsedGnData.tags))
+                print("Spoofable: " + str(parsedGnData.spoofable))
+                input("Hit enter to select another option.")
+            # 5) List IP Metadata (RDNS Pointer, ASN, country code)
+            case "5":
+                print("IP: " + parsedGnData.ip)
+                print("RDNS Pointer: " + parsedGnData.metadata.rdns)
+                print("ASN: " + parsedGnData.metadata.asn)
+                print("Country Code: " + parsedGnData.metadata.country_code)
+                input("Hit enter to select another option.")
+            case "6":
+                quickCheck(parsedGnData.ip)
+                input("Hit enter to select another option.")
+            case "7":
+                # Allow main() function to continue
+                return
+            case "8":
+                # End program
+                exit()
+            case _:
+                # Invalid input, reset selection and restart loop
+                print("You have input an invalid selection, please try again")
         selection = ""
         continue
 
